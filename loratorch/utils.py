@@ -1,7 +1,4 @@
 #  ------------------------------------------------------------------------------------------
-#  Copyright (c) Microsoft Corporation. All rights reserved.
-#  Licensed under the MIT License (MIT). See LICENSE in the repo root for license information.
-#
 #  This code is reconstructed based on loralib (https://github.com/microsoft/LoRA) by Baijiong Lin.
 #  ------------------------------------------------------------------------------------------
 import torch
