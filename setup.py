@@ -4,7 +4,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="lora-torch",
+    name="loratorch",
     version="0.1.0",
     author="Baijiong Lin",
     author_email="bj.lin.email@gmail.com",
