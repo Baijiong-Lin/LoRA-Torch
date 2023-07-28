@@ -28,13 +28,13 @@ where $x\in\mathbb{R}^{k\times n}$ is the input matrix, $W_0\in\mathbb{R}^{m\tim
 
 |                           | ``loralib``    | ``loratorch``  |                                                    |
 | ------------------------- |:--------------:|:--------------:| -------------------------------------------------- |
-| ``nn.Linear``             | ✔              | ✔              | [linear.ipynb](./examples/linear.ipynb)            |
-| ``nn.Embedding``          | ✔              | ✔              | [embedding.ipynb](./examples/embedding.ipynb)      |
-| ``nn.Conv1d``             | ✔              | ✔              |                                                    |
-| ``nn.Conv2d``             | ✔              | ✔              |                                                    |
-| ``nn.Conv3d``             | ✔              | ✔              |                                                    |
-| ``nn.MultiheadAttention`` | ✘              | ✔              |                                                    |
-| ``MergedLinear``          | ✔ (Error)      | ✔              | [mergedlinear.ipynb](./examples/mergelinear.ipynb) |
+| ``nn.Linear``             | ✓              | ✓              | [linear.ipynb](./examples/linear.ipynb)            |
+| ``nn.Embedding``          | ✓              | ✓              | [embedding.ipynb](./examples/embedding.ipynb)      |
+| ``nn.Conv1d``             | ✓              | ✓              |                                                    |
+| ``nn.Conv2d``             | ✓              | ✓              |                                                    |
+| ``nn.Conv3d``             | ✓              | ✓              |                                                    |
+| ``nn.MultiheadAttention`` | ✘              | ✓              |                                                    |
+| ``MergedLinear``          | ✓ (Error)      | ✓              | [mergedlinear.ipynb](./examples/mergelinear.ipynb) |
 | $\cdots$                  | hard to extend | easy to extend |                                                    |
 
 *We compare the results of ``loralib`` and ``loratorch``  in [examples](./examples) to demonstrate the correctness of the implementation in ``loratorch``.*
