@@ -175,6 +175,49 @@ class Linear(nn.Linear, LoRALayer):
         else:
             return nn.Linear.forward(self, x, **kwargs)
 
+class Conv1d(nn.Conv1d, LoRALayer):
+    # LoRA implemented in a Conv1d layer
+    def __init__(
+        self, 
+        in_channels: int, 
+        out_channels: int,
+        kernel_size: int,
+        r: int = 0, 
+        lora_alpha: int = 1, 
+        **kwargs
+    ):
+        nn.Conv1d.__init__(self, in_channels, out_channels, kernel_size, **kwargs)
+        LoRALayer.__init__(self, r=r, lora_alpha=lora_alpha)
+
+        assert type(kernel_size) is int
+        # Actual trainable parameters
+        self.params_with_lora = {'weight': 'w'}
+        if r > 0:
+            self.w_lora_A = nn.Parameter(
+                self.weight.new_zeros((r*kernel_size, in_channels*kernel_size))
+            )
+            self.w_lora_B = nn.Parameter(
+                self.weight.new_zeros((out_channels*kernel_size, r*kernel_size))
+            )
+            # Freezing the pre-trained weight matrix
+            self.weight.requires_grad = False
+        nn.Conv1d.reset_parameters(self)
+        self.init_lora_param()
+
+    def train(self, mode: bool = True):
+        nn.Conv1d.train(self, mode)      
+        self.lora_train(mode)
+
+    def forward(self, x: torch.Tensor, **kwargs):
+
+        if self.r > 0 and not self.merged:
+            self.merge_lora_param()
+            result = nn.Conv1d.forward(self, x, **kwargs)
+            self.sub_lora_data()
+            return result
+        else:
+            return nn.Conv1d.forward(self, x, **kwargs)
+
 class Conv2d(nn.Conv2d, LoRALayer):
     # LoRA implemented in a Conv2d layer
     def __init__(
@@ -197,7 +240,7 @@ class Conv2d(nn.Conv2d, LoRALayer):
                 self.weight.new_zeros((r*kernel_size, in_channels*kernel_size))
             )
             self.w_lora_B = nn.Parameter(
-                self.weight.new_zeros((out_channels*kernel_size, r*kernel_size))
+                self.weight.new_zeros((out_channels//self.conv.groups*kernel_size, r*kernel_size))
             )
             # Freezing the pre-trained weight matrix
             self.weight.requires_grad = False
@@ -217,6 +260,49 @@ class Conv2d(nn.Conv2d, LoRALayer):
             return result
         else:
             return nn.Conv2d.forward(self, x, **kwargs)
+
+class Conv3d(nn.Conv3d, LoRALayer):
+    # LoRA implemented in a Conv3d layer
+    def __init__(
+        self, 
+        in_channels: int, 
+        out_channels: int,
+        kernel_size: int,
+        r: int = 0, 
+        lora_alpha: int = 1, 
+        **kwargs
+    ):
+        nn.Conv3d.__init__(self, in_channels, out_channels, kernel_size, **kwargs)
+        LoRALayer.__init__(self, r=r, lora_alpha=lora_alpha)
+
+        assert type(kernel_size) is int
+        # Actual trainable parameters
+        self.params_with_lora = {'weight': 'w'}
+        if r > 0:
+            self.w_lora_A = nn.Parameter(
+                self.weight.new_zeros((r*kernel_size, in_channels*kernel_size))
+            )
+            self.w_lora_B = nn.Parameter(
+                self.weight.new_zeros((out_channels*kernel_size, r*kernel_size))
+            )
+            # Freezing the pre-trained weight matrix
+            self.weight.requires_grad = False
+        nn.Conv3d.reset_parameters(self)
+        self.init_lora_param()
+
+    def train(self, mode: bool = True):
+        nn.Conv3d.train(self, mode)      
+        self.lora_train(mode)
+
+    def forward(self, x: torch.Tensor, **kwargs):
+
+        if self.r > 0 and not self.merged:
+            self.merge_lora_param()
+            result = nn.Conv3d.forward(self, x, **kwargs)
+            self.sub_lora_data()
+            return result
+        else:
+            return nn.Conv3d.forward(self, x, **kwargs)
 
 class MultiheadAttention(nn.MultiheadAttention, LoRALayer):
     # LoRA implemented in a MultiheadAttention layer
