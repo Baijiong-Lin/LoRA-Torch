@@ -35,7 +35,8 @@ class LoRALayer():
     ):
         self.r = r
         self.lora_alpha = lora_alpha
-        self.scaling = self.lora_alpha / self.r
+        if self.r > 0:
+            self.scaling = self.lora_alpha / self.r
         # Mark the weight as unmerged
         self.merged = False
         # Set this to True if the layer to replace stores weight like (fan_in, fan_out)
