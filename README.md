@@ -22,7 +22,24 @@ where $x\in\mathbb{R}^{k\times n}$ is the input matrix, $W_0\in\mathbb{R}^{m\tim
 
 ``loralib`` computes $xW_0^\top$ and $x(BA)^\top$ respectively and then merges the results. While ``loratorch`` merges pre-trained weight $W_0$ and its LoRA weight $BA$ and then computes the results by simply using ``nn.Linear.forward()``. There is no difference between ``loralib`` and ``loratorch`` in the linear layers. But in some no-linear or complex layers, we are no sure whether this layer satisfies $L(x, W_0)+L(x, BA) = L(x, W_0+BA)$. Hence, it is difficult to extend LoRA to some complex layers by using ``loralib``. On the contrary, the idea of merging weights first in ``loratorch`` is more general and extensible. You just call ``merge_lora_param()`` in ``loratorch`` to merge weights and then call ``forward()`` in the original layer to compute the results. With the help of ``loratorch``, you can easily implement LoRA to any type of layer of ``torch.nn``.
 
- 
+
+
+## Supported Layers
+
+|                           | ``loralib``    | ``loratorch``  |                                                    |
+| ------------------------- |:--------------:|:--------------:| -------------------------------------------------- |
+| ``nn.Linear``             | ✔              | ✔              | [linear.ipynb](./examples/linear.ipynb)            |
+| ``nn.Embedding``          | ✔              | ✔              | [embedding.ipynb](./examples/embedding.ipynb)      |
+| ``nn.Conv1d``             | ✔              | ✔              |                                                    |
+| ``nn.Conv2d``             | ✔              | ✔              |                                                    |
+| ``nn.Conv3d``             | ✔              | ✔              |                                                    |
+| ``nn.MultiheadAttention`` | ✘              | ✔              |                                                    |
+| ``MergedLinear``          | ✔ (Error)      | ✔              | [mergedlinear.ipynb](./examples/mergelinear.ipynb) |
+| $\cdots$                  | hard to extend | easy to extend |                                                    |
+
+*We compare the results of ``loralib`` and ``loratorch``  in [examples](./examples) to demonstrate the correctness of the implementation in ``loratorch``.*
+
+
 
 ## Quick Start
 
@@ -70,6 +87,7 @@ where $x\in\mathbb{R}^{k\times n}$ is the input matrix, $W_0\in\mathbb{R}^{m\tim
    # ===== After =====
    torch.save(lora.lora_state_dict(model), checkpoint_path)
    ```
+
 5. Load LoRA model (need to load the pre-trained model first).
    
    ```python
