@@ -197,7 +197,7 @@ class Conv1d(nn.Conv1d, LoRALayer):
                 self.weight.new_zeros((r*kernel_size, in_channels*kernel_size))
             )
             self.w_lora_B = nn.Parameter(
-                self.weight.new_zeros((out_channels*kernel_size, r*kernel_size))
+                self.weight.new_zeros((out_channels//self.groups*kernel_size, r*kernel_size))
             )
             # Freezing the pre-trained weight matrix
             self.weight.requires_grad = False
@@ -240,7 +240,7 @@ class Conv2d(nn.Conv2d, LoRALayer):
                 self.weight.new_zeros((r*kernel_size, in_channels*kernel_size))
             )
             self.w_lora_B = nn.Parameter(
-                self.weight.new_zeros((out_channels//self.conv.groups*kernel_size, r*kernel_size))
+                self.weight.new_zeros((out_channels//self.groups*kernel_size, r*kernel_size))
             )
             # Freezing the pre-trained weight matrix
             self.weight.requires_grad = False
@@ -283,7 +283,7 @@ class Conv3d(nn.Conv3d, LoRALayer):
                 self.weight.new_zeros((r*kernel_size, in_channels*kernel_size))
             )
             self.w_lora_B = nn.Parameter(
-                self.weight.new_zeros((out_channels*kernel_size, r*kernel_size))
+                self.weight.new_zeros((out_channels//self.groups*kernel_size, r*kernel_size))
             )
             # Freezing the pre-trained weight matrix
             self.weight.requires_grad = False
