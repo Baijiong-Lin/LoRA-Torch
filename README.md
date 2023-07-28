@@ -1,5 +1,7 @@
 # LoRA-Torch
 
+[![Made With Love](https://img.shields.io/badge/Made%20With-Love-orange.svg)](https://github.com/Baijiong-Lin/LoRA-Torch)
+
 This codebase reimplementes [LoRA: Low-Rank Adaptation of Large Language Models (ICLR 2022)](https://openreview.net/forum?id=nZeVKeeFYf9) and is reconstructed based on [loralib](https://github.com/microsoft/LoRA). 
 
 
@@ -14,7 +16,6 @@ This codebase reimplementes [LoRA: Low-Rank Adaptation of Large Language Models 
 where $x\in\mathbb{R}^{k\times n}$ is the input matrix, $W_0\in\mathbb{R}^{m\times n}$ is the pre-trained weight matrix, $r$ is the predefined LoRA rank, $B\in\mathbb{R}^{m\times r}$ and $A\in \mathbb{R}^{r\times n}$ are the LoRA matrixes, and $\alpha$ is a hyper-parameter.
 
 2. For ``loratorch``,
-   
    $h = x (W_0 + \frac{\alpha}{r} BA)^\top.$
    
    
