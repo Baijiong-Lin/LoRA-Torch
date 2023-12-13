@@ -346,13 +346,13 @@ class MultiheadAttention(nn.MultiheadAttention, LoRALayer):
 
     def init_lora_param_qkv(self, enable_lora_bool):
         lora_name = self.params_with_lora['in_proj_weight']
-        nn.init.zeros_(self.__getattr__(lora_name +'_lora_B'))
+        nn.init.zeros_(getattr(self, lora_name +'_lora_B'))
         dim = int(self.in_proj_weight.size()[1] / 3)
         for idx, enable in zip(range(3), enable_lora_bool):
             if enable:
-                nn.init.kaiming_uniform_(self.__getattr__(lora_name +'_lora_A')[:,idx*dim:(idx+1)*dim], a=math.sqrt(5))
+                nn.init.kaiming_uniform_(getattr(self, lora_name +'_lora_A')[:,idx*dim:(idx+1)*dim], a=math.sqrt(5))
             else:
-                nn.init.zeros_(self.__getattr__(lora_name +'_lora_A')[:,idx*dim:(idx+1)*dim])
+                nn.init.zeros_(getattr(self, lora_name +'_lora_A')[:,idx*dim:(idx+1)*dim])
 
     def train(self, mode: bool = True):
         nn.MultiheadAttention.train(self, mode)
@@ -418,8 +418,8 @@ class MergedLinear(nn.Linear, LoRALayer):
     def merge_BA(self, param_name: str):
         lora_name = self.params_with_lora[param_name]
         delta_w = F.conv1d(
-            self.__getattr__(lora_name + '_lora_A').unsqueeze(0), 
-            self.__getattr__(lora_name + '_lora_B').unsqueeze(-1), 
+            getattr(self, lora_name + '_lora_A').unsqueeze(0), 
+            getattr(self, lora_name + '_lora_B').unsqueeze(-1), 
             groups=sum(self.enable_lora)
         ).squeeze(0)
         return self.transpose(self.zero_pad(delta_w))
