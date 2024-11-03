@@ -86,7 +86,7 @@ where $x\in\mathbb{R}^{k\times n}$ is the input matrix, $W_0\in\mathbb{R}^{m\tim
        optimizer.step()
        # (!!!) reregister model param to ensure they are in model.state_dict() and model.parameters()
        # (!!!) The performance does not be affected without this line, but you will find that the some weights are missing in model.state_dict() and model.parameters()
-       loratorch.register_model_param_after_backward(model)
+       lora.register_model_param_after_backward(model)
    ```
 
 4. Save LoRA model (only the LoRA matrixes will be saved).
