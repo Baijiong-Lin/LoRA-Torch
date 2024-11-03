@@ -85,7 +85,7 @@ where $x\in\mathbb{R}^{k\times n}$ is the input matrix, $W_0\in\mathbb{R}^{m\tim
        loss.backward()
        optimizer.step()
        # (!!!) reregister model param to ensure they are in model.state_dict() and model.parameters()
-       # (!!!) The performance does not be affected without this line, but you will find that the some weights are missing in model.state_dict() and model.parameters()
+       # (!!!) Without this line, the performance does not be affected but you will find that some weights are missing in model.state_dict() and model.parameters()
        lora.register_model_param_after_backward(model)
    ```
 
