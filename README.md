@@ -71,12 +71,22 @@ where $x\in\mathbb{R}^{k\times n}$ is the input matrix, $W_0\in\mathbb{R}^{m\tim
    
    ```python
    model = Model()
-   # This sets requires_grad to False for all parameters without the string "lora_" in their names
+   # (!!!) This sets requires_grad to False for all parameters without the string "lora_" in their names
    lora.mark_only_lora_as_trainable(model)
+   
+   optimizer = torch.optim.SGD(model.parameters(), lr=0.1)
    # Training loop
    for batch in dataloader:
        model.train()
-       ...
+       # forward process
+       loss = forward_fun(model, batch)
+       # backward process
+       optimizer.zero_grad()
+       loss.backward()
+       optimizer.step()
+       # (!!!) reregister model param to ensure they are in model.state_dict() and model.parameters()
+       # (!!!) The performance does not be affected without this line, but you will find that the some weights are missing in model.state_dict() and model.parameters()
+       loratorch.register_model_param_after_backward(model)
    ```
 
 4. Save LoRA model (only the LoRA matrixes will be saved).
@@ -132,3 +142,5 @@ year={2022},
 ## License
 
 ``loratorch`` is released under the [MIT](./LICENSE) license.
+
+

@@ -8,6 +8,11 @@ from typing import Dict
 
 from .layers import LoRALayer
 
+def register_model_param_after_backward(model: nn.Module) -> None:
+    for m in model.modules():
+        if isinstance(m, LoRALayer):
+            m.register_weight_after_backward()
+
 def print_trainable_parameters(model):
     r"""Prints the number of trainable parameters in the model."""
     trainable_params = 0

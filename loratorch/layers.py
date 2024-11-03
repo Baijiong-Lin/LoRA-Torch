@@ -8,7 +8,7 @@ import torch.nn.functional as F
 import math
 from typing import Optional, List
 
-def set_param(curr_mod, name, param=None, mode='update'):
+def set_param(curr_mod, name, param=None, mode='update', with_nn=False):
     r"""Refer to https://github.com/Baijiong-Lin/MOML/blob/main/MTL/utils.py"""
     if '.' in name:
         n = name.split('.')
@@ -20,7 +20,10 @@ def set_param(curr_mod, name, param=None, mode='update'):
     else:
         if mode == 'update':
             delattr(curr_mod, name)
-            setattr(curr_mod, name, param)
+            if with_nn:
+                setattr(curr_mod, name, nn.Parameter(param))
+            else:
+                setattr(curr_mod, name, param)
         elif mode == 'get':
             if hasattr(curr_mod, name):
                 p = getattr(curr_mod, name)
@@ -35,13 +38,19 @@ class LoRALayer():
     ):
         self.r = r
         self.lora_alpha = lora_alpha
-        self.scaling = self.lora_alpha / self.r
+        if self.r > 0:
+            self.scaling = self.lora_alpha / self.r
         # Mark the weight as unmerged
         self.merged = False
         # Set this to True if the layer to replace stores weight like (fan_in, fan_out)
         self.fan_in_fan_out = fan_in_fan_out
         # define params that require LoRA {'param_name': 'lora_name'}
         self.params_with_lora = {}
+
+    def register_weight_after_backward(self):
+        for param_name, _ in self.params_with_lora.items():
+            p = set_param(self, param_name, mode='get')
+            set_param(self, param_name, param=p, mode='update', with_nn=True)
 
     def register_lora_param(self):
         r"""Register LoRA matrix"""
