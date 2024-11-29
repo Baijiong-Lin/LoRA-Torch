@@ -16,7 +16,7 @@ def set_param(curr_mod, name, param=None, mode='update', with_nn=False):
         rest = '.'.join(n[1:])
         for name, mod in curr_mod.named_children():
             if module_name == name:
-                return set_param(mod, rest, param, mode=mode)
+                return set_param(mod, rest, param, mode=mode, with_nn=with_nn)
     else:
         if mode == 'update':
             delattr(curr_mod, name)
@@ -50,6 +50,7 @@ class LoRALayer():
     def register_weight_after_backward(self):
         for param_name, _ in self.params_with_lora.items():
             p = set_param(self, param_name, mode='get')
+            # print('+'*10, param_name, p.flatten()[:10])
             set_param(self, param_name, param=p, mode='update', with_nn=True)
 
     def register_lora_param(self):
@@ -350,7 +351,15 @@ class MultiheadAttention(nn.MultiheadAttention, LoRALayer):
                 self.params_with_lora.update({'in_proj_weight': lora_name})
                 self.register_lora_param()
                 nn.MultiheadAttention._reset_parameters(self)
+                if 'o' in enable_lora:
+                    self.init_lora_param_o()
                 self.init_lora_param_qkv(enable_lora_bool)
+
+    def init_lora_param_o(self):
+        param_name, lora_name = 'out_proj.weight', 'o'
+        if hasattr(self, f'{lora_name}_lora_A'):
+            nn.init.kaiming_uniform_(eval(f'self.{lora_name}_lora_A'), a=math.sqrt(5))
+            nn.init.zeros_(eval(f'self.{lora_name}_lora_B'))
 
     def init_lora_param_qkv(self, enable_lora_bool):
         lora_name = self.params_with_lora['in_proj_weight']
