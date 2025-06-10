@@ -43,7 +43,7 @@ where $x\in\mathbb{R}^{k\times n}$ is the input matrix, $W_0\in\mathbb{R}^{m\tim
 
 ## Quick Start
 
-We have provided an example to demonstrate that how to apply LoRA-Torch to ``nn.MultiheadAttention`` in OpenCLIP. We greatly appreciate Viet Q. Vo's @vietvo89 valuable contribution.
+:bangbang: We have provided an [example](https://github.com/Baijiong-Lin/LoRA-Torch/blob/main/examples/Finetune_open_clip_with_LoRA_Torch_on_CIFAR10.ipynb) to demonstrate that how to apply LoRA-Torch to ``nn.MultiheadAttention`` in OpenCLIP. We greatly appreciate [@vietvo89](https://github.com/vietvo89)'s valuable contribution.
 
 **The usage of ``loratorch`` is the same as ``loralib``.**
 
