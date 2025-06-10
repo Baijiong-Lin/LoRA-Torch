@@ -33,7 +33,7 @@ where $x\in\mathbb{R}^{k\times n}$ is the input matrix, $W_0\in\mathbb{R}^{m\tim
 | ``nn.Conv1d``             | ✓              | ✓              |                                                    |
 | ``nn.Conv2d``             | ✓              | ✓              |                                                    |
 | ``nn.Conv3d``             | ✓              | ✓              |                                                    |
-| ``nn.MultiheadAttention`` | ✘              | ✓              |                                                    |
+| ``nn.MultiheadAttention`` | ✘              | ✓              |  [Finetune_open_clip_with_LoRA_Torch_on_CIFAR10.ipynb](https://github.com/Baijiong-Lin/LoRA-Torch/blob/main/examples/Finetune_open_clip_with_LoRA_Torch_on_CIFAR10.ipynb)   |
 | ``MergedLinear``          | ✓ (Error)      | ✓              | [mergedlinear.ipynb](https://github.com/Baijiong-Lin/LoRA-Torch/blob/main/examples/mergedlinear.ipynb) |
 | $\cdots$                  | hard to extend | easy to extend |                                                    |
 
@@ -42,6 +42,8 @@ where $x\in\mathbb{R}^{k\times n}$ is the input matrix, $W_0\in\mathbb{R}^{m\tim
 
 
 ## Quick Start
+
+We have provided an example to demonstrate that how to apply LoRA-Torch to ``nn.MultiheadAttention`` in OpenCLIP. We greatly appreciate Viet Q. Vo's @vietvo89 valuable contribution.
 
 **The usage of ``loratorch`` is the same as ``loralib``.**
 
